@@ -1,0 +1,502 @@
+/*---DEMO.SQL---*/
+-- phpMyAdmin SQL Dump
+-- version 3.2.4
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Aug 02, 2020 at 09:29 AM
+-- Server version: 5.1.41
+-- PHP Version: 5.3.1
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `demo`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employees`
+--
+
+CREATE TABLE IF NOT EXISTS `employees` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `salary` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `name`, `address`, `salary`) VALUES
+(1, 'Roland Mendel', 'C/ Araquil, 67, Madrid', 5000),
+(2, 'Victoria Ashworth', '35 King George, London', 6500),
+(3, 'Martin Blank', '25, Rue Lauriston, Paris', 8000),
+(4, 'ahmet', 'ashleigh', 10000),
+(5, 'elif', 'mdw', 10010);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `description` text NOT NULL,
+  `price` double NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `description`, `price`, `created`, `modified`) VALUES
+(1, 'Basketball', 'A ball used in the NBA.', 49.99, '2015-08-02 12:04:03', '2015-08-06 06:59:18'),
+(3, 'Gatorade', 'This is a very good drink for athletes.', 1.99, '2015-08-02 12:14:29', '2015-08-06 06:59:18'),
+(4, 'Eye Glasses', 'It will make you read better.', 6, '2015-08-02 12:15:04', '2015-08-06 06:59:18'),
+(5, 'Trash Can', 'It will help you maintain cleanliness.', 3.95, '2015-08-02 12:16:08', '2015-08-06 06:59:18'),
+(6, 'Mouse', 'Very useful if you love your computer.', 11.35, '2015-08-02 12:17:58', '2015-08-06 06:59:18'),
+(7, 'Earphone', 'You need this one if you love music.', 7, '2015-08-02 12:18:21', '2015-08-06 06:59:18'),
+(8, 'Pillow', 'Sleeping well is important.', 8.99, '2015-08-02 12:18:56', '2015-08-06 06:59:18'),
+(9, 'ahmet', 'boss', 112, '2019-12-12 11:22:39', '2019-12-12 11:41:27'),
+(10, 'elif', 'katim', 456, '2019-12-12 12:00:24', '2019-12-12 12:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(64) NOT NULL,
+  `useremail` varchar(128) NOT NULL,
+  `userphone` varchar(24) NOT NULL,
+  `dt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `useremail`, `userphone`, `dt`) VALUES
+(1, 'Zaid Khalid', 'zaid@gmail.com', '876-564-6544', '2019-02-12 06:22:25'),
+(2, 'Usman', 'usman@gmail.com', '887-655-8745', '2019-02-12 06:22:43'),
+(4, 'Zohaib', 'zohaib@gmail.com', '878-652-6985', '2019-02-12 06:23:20'),
+(5, 'Akram', 'akram@gmail.com', '324-985-3214', '2019-02-12 06:23:36'),
+(6, 'Aslam', 'aslam@gmail.com', '777-874-8569', '2019-02-12 06:23:56'),
+(7, 'Daood', 'daood@gmail.com', '666-123-5412', '2019-02-12 06:24:19'),
+(8, 'Henary', 'henary@gmail.com', '234-236-1254', '2019-02-12 06:32:48'),
+(9, 'Mark Jhon', 'mjhon@gmail.com', '324-569-3652', '2019-02-12 06:33:06');
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+/*=============================================================================================================================*/
+/*---READ_ONE---*/
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>PDO - Read One Record - PHP CRUD Tutorial</title>
+ 
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+ 
+</head>
+<body>
+ 
+ 
+    <!-- container -->
+    <div class="container">
+  
+        <div class="page-header">
+            <h1>Read Product</h1>
+        </div>
+         
+        <!-- PHP read one record will be here -->
+ 
+        <?php
+// get passed parameter value, in this case, the record ID
+// isset() is a PHP function used to verify if a value is there or not
+$id=isset($_GET['id']) ? $_GET['id'] : die('ERROR: Record ID not found.');
+ 
+//include database connection
+include 'config/database.php';
+ 
+// read current record's data
+try {
+    // prepare select query
+    $query = "SELECT id, name, description, price FROM products WHERE id = ? LIMIT 0,1";
+    $stmt = $con->prepare( $query );
+ 
+    // this is the first question mark
+    $stmt->bindParam(1, $id);
+ 
+    // execute our query
+    $stmt->execute();
+ 
+    // store retrieved row to a variable
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+ 
+    // values to fill up our form
+    $name = $row['name'];
+    $description = $row['description'];
+    $price = $row['price'];
+}
+ 
+// show error
+catch(PDOException $exception){
+    die('ERROR: ' . $exception->getMessage());
+}
+?>
+
+        <!-- HTML read one record table will be here -->
+ <!--we have our html table here where the record will be displayed-->
+<table class='table table-hover table-responsive table-bordered'>
+    <tr>
+        <td>Name</td>
+        <td><?php echo htmlspecialchars($name, ENT_QUOTES);  ?></td>
+    </tr>
+    <tr>
+        <td>Description</td>
+        <td><?php echo htmlspecialchars($description, ENT_QUOTES);  ?></td>
+    </tr>
+    <tr>
+        <td>Price</td>
+        <td><?php echo htmlspecialchars($price, ENT_QUOTES);  ?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <a href='index.php' class='btn btn-danger'>Back to read products</a>
+        </td>
+    </tr>
+</table>
+    </div> <!-- end .container -->
+     
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+   
+<!-- Latest compiled and minified Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
+</body>
+</html>
+
+/*=============================================================================================================================*/
+/*---INDEX---*/
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>PDO - Create a Record - PHP CRUD Tutorial</title>
+      
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+          
+</head>
+<body>
+  
+    <!-- container -->
+    <div class="container">
+   
+        <div class="page-header">
+            <h1>Create Product</h1>
+        </div>
+      
+    <!-- html form to create product will be here -->
+    <?php
+if($_POST){
+ 
+    // include database connection
+    include 'config/database.php';
+ 
+    try{
+     
+        // insert query
+        $query = "INSERT INTO products SET name=:name, description=:description, price=:price, created=:created";
+ 
+        // prepare query for execution
+        $stmt = $con->prepare($query);
+ 
+        // posted values
+        $name=htmlspecialchars(strip_tags($_POST['name']));
+        $description=htmlspecialchars(strip_tags($_POST['description']));
+        $price=htmlspecialchars(strip_tags($_POST['price']));
+ 
+        // bind the parameters
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':price', $price);
+         
+        // specify when this record was inserted to the database
+        $created=date('Y-m-d H:i:s');
+        $stmt->bindParam(':created', $created);
+         
+        // Execute the query
+        if($stmt->execute()){
+            echo "<div class='alert alert-success'>Record was saved.</div>";
+        }else{
+            echo "<div class='alert alert-danger'>Unable to save record.</div>";
+        }
+         
+    }
+     
+    // show error
+    catch(PDOException $exception){
+        die('ERROR: ' . $exception->getMessage());
+    }
+}
+?>
+    <!-- html form here where the product information will be entered -->
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+    <table class='table table-hover table-responsive table-bordered'>
+        <tr>
+            <td>Name</td>
+            <td><input type='text' name='name' class='form-control' /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><textarea name='description' class='form-control'></textarea></td>
+        </tr>
+        <tr>
+            <td>Price</td>
+            <td><input type='text' name='price' class='form-control' /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type='submit' value='Save' class='btn btn-primary' />
+                <a href='index.php' class='btn btn-danger'>Back to read products</a>
+            </td>
+        </tr>
+    </table>
+</form>          
+    </div> <!-- end .container -->
+      
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+   
+<!-- Latest compiled and minified Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+</body>
+</html>
+
+/*=============================================================================================================================*/
+/*---PAGING---*/
+<?php
+echo "<ul class='pagination pull-left margin-zero mt0'>";
+ 
+// first page button will be here
+ // first page button
+if($page>1){
+ 
+    $prev_page = $page - 1;
+    echo "<li>";
+        echo "<a href='{$page_url}page={$prev_page}'>";
+            echo "<span style='margin:0 .5em;'>&laquo;</span>";
+        echo "</a>";
+    echo "</li>";
+}
+// clickable page numbers will be here
+ // clickable page numbers
+ 
+// find out total pages
+$total_pages = ceil($total_rows / $records_per_page);
+ 
+// range of num links to show
+$range = 1;
+ 
+// display links to 'range of pages' around 'current page'
+$initial_num = $page - $range;
+$condition_limit_num = ($page + $range)  + 1;
+ 
+for ($x=$initial_num; $x<$condition_limit_num; $x++) {
+ 
+    // be sure '$x is greater than 0' AND 'less than or equal to the $total_pages'
+    if (($x > 0) && ($x <= $total_pages)) {
+ 
+        // current page
+        if ($x == $page) {
+            echo "<li class='active'>";
+                echo "<a href='javascript::void();'>{$x}</a>";
+            echo "</li>";
+        }
+ 
+        // not current page
+        else {
+            echo "<li>";
+                echo " <a href='{$page_url}page={$x}'>{$x}</a> ";
+            echo "</li>";
+        }
+    }
+}
+// last page button will be here
+ // last page button
+if($page<$total_pages){
+    $next_page = $page + 1;
+ 
+    echo "<li>";
+        echo "<a href='{$page_url}page={$next_page}'>";
+            echo "<span style='margin:0 .5em;'>&raquo;</span>";
+        echo "</a>";
+    echo "</li>";
+}
+echo "</ul>";
+?>
+
+
+/*=============================================================================================================================*/
+
+
+/*=============================================================================================================================*/
+/*---UPDATE---*/
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>PDO - Update a Record - PHP CRUD Tutorial</title>
+     
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+         
+</head>
+<body>
+ 
+    <!-- container -->
+    <div class="container">
+  
+        <div class="page-header">
+            <h1>Update Product</h1>
+        </div>
+     
+        <!-- PHP read record by ID will be here -->
+        <?php
+// get passed parameter value, in this case, the record ID
+// isset() is a PHP function used to verify if a value is there or not
+$id=isset($_GET['id']) ? $_GET['id'] : die('ERROR: Record ID not found.');
+ 
+//include database connection
+include 'config/database.php';
+ 
+// read current record's data
+try {
+    // prepare select query
+    $query = "SELECT id, name, description, price FROM products WHERE id = ? LIMIT 0,1";
+    $stmt = $con->prepare( $query );
+     
+    // this is the first question mark
+    $stmt->bindParam(1, $id);
+     
+    // execute our query
+    $stmt->execute();
+     
+    // store retrieved row to a variable
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+     
+    // values to fill up our form
+    $name = $row['name'];
+    $description = $row['description'];
+    $price = $row['price'];
+}
+ 
+// show error
+catch(PDOException $exception){
+    die('ERROR: ' . $exception->getMessage());
+}
+?>
+        <!-- HTML form to update record will be here -->
+<!-- PHP post to update record will be here -->
+<?php
+ 
+// check if form was submitted
+if($_POST){
+     
+    try{
+     
+        // write update query
+        // in this case, it seemed like we have so many fields to pass and 
+        // it is better to label them and not use question marks
+        $query = "UPDATE products 
+                    SET name=:name, description=:description, price=:price 
+                    WHERE id = :id";
+ 
+        // prepare query for excecution
+        $stmt = $con->prepare($query);
+ 
+        // posted values
+        $name=htmlspecialchars(strip_tags($_POST['name']));
+        $description=htmlspecialchars(strip_tags($_POST['description']));
+        $price=htmlspecialchars(strip_tags($_POST['price']));
+ 
+        // bind the parameters
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':id', $id);
+         
+        // Execute the query
+        if($stmt->execute()){
+            echo "<div class='alert alert-success'>Record was updated.</div>";
+        }else{
+            echo "<div class='alert alert-danger'>Unable to update record. Please try again.</div>";
+        }
+         
+    }
+     
+    // show errors
+    catch(PDOException $exception){
+        die('ERROR: ' . $exception->getMessage());
+    }
+}
+?> 
+<!--we have our html form here where new record information can be updated-->
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?id={$id}");?>" method="post">
+    <table class='table table-hover table-responsive table-bordered'>
+        <tr>
+            <td>Name</td>
+            <td><input type='text' name='name' value="<?php echo htmlspecialchars($name, ENT_QUOTES);  ?>" class='form-control' /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><textarea name='description' class='form-control'><?php echo htmlspecialchars($description, ENT_QUOTES);  ?></textarea></td>
+        </tr>
+        <tr>
+            <td>Price</td>
+            <td><input type='text' name='price' value="<?php echo htmlspecialchars($price, ENT_QUOTES);  ?>" class='form-control' /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type='submit' value='Save Changes' class='btn btn-primary' />
+                <a href='index.php' class='btn btn-danger'>Back to read products</a>
+            </td>
+        </tr>
+    </table>
+</form>         
+    </div> <!-- end .container -->
+     
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+   
+<!-- Latest compiled and minified Bootstrap JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
+</body>
+</html>
